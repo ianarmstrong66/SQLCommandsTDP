@@ -8,16 +8,10 @@
   8  desc all_database 
   9  desc all_dbs;
  10  desc $databases;
- 11  desc $database 
- 12  desc $_all_databases 
- 13  desc $all_databases 
- 14  selec table_name from user_tables;
- 15  grant create table to Bill;
- 16  select * from all_users;
+ 11   16  select * from all_users;
  17  select view_name from all_views where view_name like '%USER%';
  18  select view_name from all_views where view_name like 'ALL%USER%';
- 19  select view_name from all_views where view_name like 'ALL%ROL%';
- 20  select * from all_ords_roles;
+select * from all_ords_roles;
  21  desc all_ords_roles;
  22  select name from all_ords_roles;
  23  select table_name from all_tables where table_name like '%USER%';
@@ -30,7 +24,6 @@
  30  grant pilot to Bill;
  31  connect;
  32  select user from dual;
- 33  connect as hr /oracle 
  34  connect hr /oracle 
  35  select table_name from user_tables;
  36  select * from category;
@@ -40,17 +33,13 @@
  40  insert into sales values(102,1,2.05,sysdate-.51);
  41  insert into sales values(101,1,2.15,sysdate-.4);
  42  insert into sales values(101,2,2.05,sysdate-.3);
- 43  select count(*) from products a, sales b where a.pid = b.pid order by count(*) desc;
- 44  select name,count(*) from products a, sales b where a.pid = b.pid and rownum < 2 group by name;
- 45  select name,count(*) from products a, sales b where a.pid = b.pid and rownum < 2 group by name order by count(*) desc;
- 46  select name,count(*) from products a, sales b where a.pid = b.pid group by name order by count(*) desc;
  47  select * from products;
  48  insert into sales values(105,2,1.05,sysdate-.51);
  49  insert into sales values(105,3,1.04,sysdate-.5);
  50  insert into sales values(105,1,1.03,sysdate-.4);
  51  insert into sales values(105,2,1.02,sysdate-.3);
- 52  commit;
- 53  select name,count(*) from products a, sales b where a.pid = b.pid group by name having count(*) > 1 order by count(*) desc;
- 54  select name from (select name,count(*) from products a, sales b where a.pid = b.pid group by name having count(*) > 1 order by count(*) desc) where rownum < 2;
- 55  select name as populat_item from (select name,count(*) from products a, sales b where a.pid = b.pid group by name having count(*) > 1 order by count(*) desc) where rownum < 2;
- 56  select name as popular_item from (select name,count(*) from products a, sales b where a.pid = b.pid group by name having count(*) > 1 order by count(*) desc) where rownum < 2;
+ 43  insert into sales values(101,1,2.00,sysdate-0.01);
+ 44  select a.name as PopularItem, count(*) from products a, sales b where a.pid =b.pid group by a.name having count(*) = (select max(count) from (select c.name, count(*) as count from products c, sales d where
+ 45  insert into sales values(101,2,2.03,sysdate-0.01);
+ 46  select a.name as PopularItem, count(*) from products a, sales b where a.pid =b.pid group by a.name having count(*) = (select max(count(*)) from sales c group by c.pid);
+
