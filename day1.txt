@@ -8,7 +8,7 @@
   8  desc all_database 
   9  desc all_dbs;
  10  desc $databases;
- 11   16  select * from all_users;
+ 16  select * from all_users;
  17  select view_name from all_views where view_name like '%USER%';
  18  select view_name from all_views where view_name like 'ALL%USER%';
 select * from all_ords_roles;
@@ -22,18 +22,12 @@ select * from all_ords_roles;
  28  grant create view to pilot;
  29  grant create trigger to pilot;
  30  grant pilot to Bill;
- 31  connect;
  32  select user from dual;
- 34  connect hr /oracle 
- 35  select table_name from user_tables;
- 36  select * from category;
- 37  select * from subcategory;
  38  create table sales (PID number(3) references products, qty number(3), price number(7,2), Dates date);
  39  insert into sales values(101,2,2,sysdate-1);
  40  insert into sales values(102,1,2.05,sysdate-.51);
  41  insert into sales values(101,1,2.15,sysdate-.4);
  42  insert into sales values(101,2,2.05,sysdate-.3);
- 47  select * from products;
  48  insert into sales values(105,2,1.05,sysdate-.51);
  49  insert into sales values(105,3,1.04,sysdate-.5);
  50  insert into sales values(105,1,1.03,sysdate-.4);
@@ -42,4 +36,17 @@ select * from all_ords_roles;
  44  select a.name as PopularItem, count(*) from products a, sales b where a.pid =b.pid group by a.name having count(*) = (select max(count) from (select c.name, count(*) as count from products c, sales d where
  45  insert into sales values(101,2,2.03,sysdate-0.01);
  46  select a.name as PopularItem, count(*) from products a, sales b where a.pid =b.pid group by a.name having count(*) = (select max(count(*)) from sales c group by c.pid);
+
+ create view popularitem as  select a.name as PopularItem, count(*) as count from products a, sales b where a.pid =b.pid group by a.name having count(*) = (select max(count(*)) from sales c group by c.pid);
+ create view popularsub as select a.description, count(*) as count from subcategory a, products b, sales c where a.sia = b.sia and b.pid= c.pid group by a.description having count(*) = (select max(count(*))
+ 39  insert into products values(106,30,'PADS');
+ 40  insert into sales values (106,1,30.33,sysdate-.5);
+ 41  create view popularcat as select a.description, count(*) as maxcount from category a, subcategory b, products c, sales d where a.cia = b.cia and b.sia = c.sia and c.pid = d.pid group by a.description havin
+ 42  select * from popularcat;
+ 43  select * from popularsub;
+ 44  select * from popularitem;
+ 46  desc popularcat;
+ 49  select a.description, count(*) as maxcount from category a, subcategory b, products c, sales d where a.cia = b.cia and b.sia = c.sia and c.pid = d.pid group by a.description having count(*) = (select max(c
+ 50  select a.description, count(*) as count from subcategory a, products b, sales c where a.sia = b.sia and b.pid= c.pid group by a.description having count(*) = (select max(count(*)) from subcategory d, produ
+ 
 
