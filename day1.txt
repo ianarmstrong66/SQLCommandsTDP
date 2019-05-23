@@ -87,4 +87,64 @@ end if;
 dbms_output.put_line('Cia is '||newcid||' - Sia is '||newsid);
 end;
 /
-
+ create or replace function Dname(a number) return char is DN departments.department_name%TYPE; begin select department_name into DN from departments wher
+  create or replace function countsub(cid number) return number is result number(4); begin select nvl(count(*),0) into result from subcategory where cia = 
+  create or replace function countprod(cid number) return number is result number(4); begin select nvl(count(*),0) into result from products a, subcategory
+  create sequence cat_seq start with 10 increment by 1 nocache nocycle;
+  select cat_seq.currvalue from dual;
+  select cat_seq.nextval from dual;
+  create or replace procedure cat_entry(cat char, sub char) is  newcid number(3); newsid number(3);  begin dbms_output.put_line('Start'); select nvl(max(ci
+   call cat_entry('KITCHEN','SINK');
+   call cat_entry('HOME','AWAY');
+   select * from category;
+    create or replace procedure cat_entry(cat char, sub char) is  newcid number(3); newsid number(3);  begin dbms_output.put_line('Start'); select nvl(max(ci
+ alter table subcategory drop constraint SYS_C0014572;
+create table backup_school as select * from school;
+create or replace trigger tr_backup_school
+  2  before delete on school
+  3  for each row
+  4  begin
+  5  insert into backup_school values(:old.Regno, :old.name, :old.marks, :old.email_address, :old.telephone, user,sysdate);
+  6  end;
+  7* /
+create or replace trigger tr_school_ins
+  2  before insert on school
+  3  for each row
+  4  begin
+  5  if :new.marks in(58,59) then 
+  6  :new.marks:=60;
+  7  end if;
+  8  :new.name := upper(:new.name);
+  9  end;
+ 10* /
+alter table backup_school add user char(20);
+create or replace procedure cat_entry(cat char, sub char)
+  2  is 
+  3  newcid number(3);
+  4  newsid number(3);
+  5   begin
+  6  dbms_output.put_line('Start');
+  7  select nvl(max(cia),0)+1 into newcid from category where description = cat;
+  8  dbms_output.put_line('newcid is '|| newcid);
+  9  if newcid > 1 then
+ 10   begin
+ 11    select nvl(max(sia),0)+1 into newsid from subcategory where cia = newcid and description = sub;
+ 12    if newsid > 1 then
+ 13      dbms_output.put_line('Record already exists');
+ 14    else
+ 15      select nvl(max(sia),0)+1 into newsid from subcategory where cia = newcid;
+ 16      insert into subcategory values(newsid,newcid,sub);
+ 17      dbms_output.put_line('Entered a new entry in subcategory');
+ 18    end if;
+ 19   end;
+ 20  else
+ 21   begin
+ 22    insert into category values(cat_seq.nextval,cat);
+ 23    insert into subcategory values (1,cat_seq.currval,sub);
+ 24    dbms_output.put_line('Entered new entries in both category and subcategory');
+ 25   end;
+ 26  end if;
+ 27  dbms_output.put_line('Cia is '||cat_seq.currval||' - Sia is '||newsid);
+ 28  end;
+ 29* /
+ 
